@@ -34,6 +34,7 @@ load_dotenv()
 
 app = FastAPI()
 
+
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
@@ -43,6 +44,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 10000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
 
 # MongoDB Connection
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
@@ -712,7 +716,3 @@ async def download_file(filename: str, current_user: UserInDB = Depends(get_curr
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
     return FileResponse(file_path, media_type="application/octet-stream", filename=filename)
-
-if __name__ == "__main__":
-    port = int(os.getenv("PORT", 10000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
